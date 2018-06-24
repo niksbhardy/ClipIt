@@ -54,7 +54,7 @@ $('html').height(280);
     
     chrome.storage.sync.get('noteList', function(getEvent) {
       
-      if(getEvent.noteList) {
+      if(getEvent.noteList && getEvent.noteList.length>0) {
         getEvent.noteList.forEach(function(note) {
           exportNote =  exportNote + note + "\n\n";
         });
