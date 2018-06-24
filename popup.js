@@ -5,16 +5,15 @@ $('html').height(280);
       
       if(getEvent.noteList && getEvent.noteList.length) {
         let counter = 0;
-        getEvent.noteList.forEach(function(note) {
+      getEvent.noteList.forEach(function(note) {
           $('#notes').append("<div style='padding: 10px; font-size: 14px'>" +
             "<p style='margin-top: 0px;margin-bottom: 5px;'>" + note + "</p>" + 
-            "<a class='remove-note' style='color: #757575;font-size: 10px;margin-top: 0px;margin-bottom: 0px; text-align: right;margin-left: 85%;' id=" + counter++ + ">" + 
+            "<button class='remove-note' style='background: Transparent; border: none; outline: none; color: #757575;font-size: 10px;margin-top: 0px;margin-bottom: 0px; text-align: right;margin-left: 85%;' id=" + counter++ + ">" + 
               
-            "<strong>" + "Remove" + "</strong>" + "</a>" +
+            "<strong>" + "Remove" + "</strong>" + "</button>" +
             "</div>"
           );
         });
-
 
 
         $('#num-notes').text(getEvent.noteList.length + " notes");
@@ -60,13 +59,19 @@ $('html').height(280);
           exportNote =  exportNote + note + "\n\n";
         });
         //alert(exportNote)
-        saveText("Notes.txt", exportNote);
+ 	  var d = new Date();
+          var dayx = ((''+d.getDate()).length<2 ? '0' : '') + d.getDate();
+          var month = ((''+d.getMonth()).length<2 ? '0' : '') + d.getMonth();
+          var year = d.getFullYear();
+          
+          var fileName = 'Notes' + '-' + dayx + '-' + month + '-' + year + '.txt';
+        saveText(fileName, exportNote);
 
         var notifOptions = {
           type: 'basic',
           iconUrl: 'icons/clipit128.png',
           title: 'Notes Exported',
-          'message': 'Notes have been exported to Notes.txt file' 
+          'message': 'Notes have been exported to ' + fileName + ' file'
         };
     
         chrome.notifications.create('exportNotif', notifOptions);
@@ -87,6 +92,8 @@ $('html').height(280);
   });
 
   $('#clear').click(function() {
+
+	if(confirm("Are you sure want to remove all the notes?")){
     chrome.storage.sync.set({'noteList': []});
 
     var notifOptions = {
@@ -99,6 +106,7 @@ $('html').height(280);
     $('#notes').text('No notes yet');
     $('#notes').css('text-align', 'center');
     chrome.notifications.create('exportNotif', notifOptions);
+    }
   });
 
   function saveText(filename, text) {
