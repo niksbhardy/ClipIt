@@ -10,7 +10,8 @@ chrome.contextMenus.removeAll(function() {
 chrome.contextMenus.onClicked.addListener(function(contextEvent) {
   if(contextEvent.menuItemId == 'clipit') {
     let clippedText = contextEvent.selectionText;
-    
+     clippedText = clippedText.replace(/\</g,'&lt');
+    clippedText = clippedText.replace(/\>/g,'&gt');
     chrome.storage.sync.get('noteList', function(getEvent) {
       
       if(getEvent.noteList) {
